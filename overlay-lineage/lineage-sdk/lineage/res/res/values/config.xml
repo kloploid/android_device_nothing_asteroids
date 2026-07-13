@@ -47,4 +47,12 @@
         <item>restart_bootloader</item>
         <item>restart_fastboot</item>
     </string-array>
+
+    <!-- Action Button key handler -->
+    <string-array name="config_deviceKeyHandlerLibs" translatable="false">
+        <item>/system_ext/priv-app/AsteroidsParts/AsteroidsParts.apk</item>
+    </string-array>
+    <string-array name="config_deviceKeyHandlerClasses" translatable="false">
+        <item>org.lineageos.settings.asteroids.KeyHandler</item>
+    </string-array>
 </resources>

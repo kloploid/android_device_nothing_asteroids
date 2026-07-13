@@ -9,11 +9,11 @@ genfscon proc /touchpanel/fod_mode         u:object_r:vendor_proc_fingerprint:s0
 genfscon sysfs /panel_feature/fp_status    u:object_r:vendor_sysfs_fingerprint:s0
 
 # Lights
-genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/all_white_brightness    u:object_r:vendor_sysfs_graphics:s0
-genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/dev_color               u:object_r:vendor_sysfs_graphics:s0
-genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/frame_brightness        u:object_r:vendor_sysfs_graphics:s0
-genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/operating_mode          u:object_r:vendor_sysfs_graphics:s0
-genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/single_brightness       u:object_r:vendor_sysfs_graphics:s0
+genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/all_white_brightness    u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/dev_color               u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/frame_brightness        u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/operating_mode          u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/single_brightness       u:object_r:sysfs_leds:s0
 
 # Touch
 genfscon sysfs /devices/platform/soc/ac0000.qcom,qupv3_0_geni_se/a80000.spi/spi_master/spi0/spi0.0/fts_fod_enabled                   u:object_r:vendor_sysfs_touch:s0
@@ -26,3 +26,5 @@ genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-
 genfscon sysfs /devices/platform/soc/soc:goodix_fp/wakeup                                                    u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/ac0000.qcom,qupv3_0_geni_se/a80000.spi/spi_master/spi0/spi0.0/wakeup    u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display-primary/wakeup                                     u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/all_brightness    u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_1_geni_se/880000.i2c/i2c-7/7-003a/leds/aw20036_led/brightness    u:object_r:sysfs_leds:s0

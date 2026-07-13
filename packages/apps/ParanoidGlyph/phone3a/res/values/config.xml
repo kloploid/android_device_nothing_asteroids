@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Device -->
+    <string name="glyph_settings_device" translatable="false">phone3a</string>
+
+    <!-- Zones (logical): 0=upper-left, 1=lower-left, 2=right -->
+    <!-- Frame position -> zone map, in aw20036 led_all order (20 upper-left, 11 right, 5 lower-left) -->
+    <integer-array name="glyph_settings_zone_map" translatable="false">
+        <item>0</item><item>0</item><item>0</item><item>0</item><item>0</item>
+        <item>0</item><item>0</item><item>0</item><item>0</item><item>0</item>
+        <item>0</item><item>0</item><item>0</item><item>0</item><item>0</item>
+        <item>0</item><item>0</item><item>0</item><item>0</item><item>0</item>
+        <item>2</item><item>2</item><item>2</item><item>2</item><item>2</item>
+        <item>2</item><item>2</item><item>2</item><item>2</item><item>2</item>
+        <item>2</item>
+        <item>1</item><item>1</item><item>1</item><item>1</item><item>1</item>
+    </integer-array>
+
+    <!-- Brightness (aw20036 pwm 0-255) -->
+    <integer name="glyph_settings_brightness_max" translatable="false">255</integer>
+    <integer-array name="glyph_settings_brightness_levels" translatable="false">
+        <item>32</item>
+        <item>96</item>
+        <item>160</item>
+        <item>@integer/glyph_settings_brightness_max</item>
+    </integer-array>
+</resources>
