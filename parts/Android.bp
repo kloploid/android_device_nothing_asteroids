@@ -12,6 +12,11 @@ android_app {
     privileged: true,
     system_ext_specific: true,
 
+    // KeyHandler is loaded reflectively by PhoneWindowManager; R8 must not strip it
+    optimize: {
+        enabled: false,
+    },
+
     static_libs: [
         "androidx.preference_preference",
         "SettingsLib",

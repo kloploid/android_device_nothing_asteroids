@@ -12,11 +12,22 @@ allow glyph_app system_app_data_file:{ file lnk_file } create_file_perms;
 
 # Services the app binds to
 allow glyph_app {
+    activity_service
+    activity_task_service
     audio_service
     audioserver_service
+    autofill_service
+    batteryproperties_service
+    batterystats_service
+    content_capture_service
+    game_service
+    gpu_service
+    hint_service
+    media_session_service
+    netstats_service
     sensorservice_service
     surfaceflinger_service
+    thermal_service
     vibrator_manager_service
-    activity_service
-    batterystats_service
+    virtual_device_native_service
 }:service_manager find;
