@@ -41,6 +41,7 @@ import co.aospa.glyph.R;
 import co.aospa.glyph.Constants.Constants;
 import co.aospa.glyph.Manager.SettingsManager;
 import co.aospa.glyph.Utils.FileUtils;
+import co.aospa.glyph.Utils.ResourceUtils;
 import co.aospa.glyph.Utils.ServiceUtils;
 
 public class SettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
@@ -107,8 +108,15 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mChargingLevelPreference.setOnPreferenceChangeListener(this);
 
         mChargingPowersharePreference = (SwitchPreferenceCompat) findPreference(Constants.GLYPH_CHARGING_POWERSHARE_ENABLE);
-        mChargingPowersharePreference.setEnabled(glyphEnabled);
-        mChargingPowersharePreference.setOnPreferenceChangeListener(this);
+        String powersharePath = ResourceUtils.getString("glyph_settings_paths_powershare_enabled_absolute");
+        if (powersharePath == null || powersharePath.isEmpty()) {
+            // No reverse wireless charging on this device
+            mChargingPowersharePreference.getParent().removePreference(mChargingPowersharePreference);
+            mChargingPowersharePreference = null;
+        } else {
+            mChargingPowersharePreference.setEnabled(glyphEnabled);
+            mChargingPowersharePreference.setOnPreferenceChangeListener(this);
+        }
 
         mVolumeLevelPreference = (SwitchPreferenceCompat) findPreference(Constants.GLYPH_VOLUME_LEVEL_ENABLE);
         mVolumeLevelPreference.setEnabled(glyphEnabled);
@@ -126,7 +134,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             mCallPreference.setSwitchEnabled(false);
             mChargingLevelPreference.setEnabled(false);
             mVolumeLevelPreference.setEnabled(false);
-            mChargingPowersharePreference.setEnabled(false);
+            if (mChargingPowersharePreference != null) mChargingPowersharePreference.setEnabled(false);
         }
 
         mHandler.post(() -> ServiceUtils.checkGlyphService());
@@ -164,7 +172,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             mCallPreference.setSwitchEnabled(isChecked);
             mChargingLevelPreference.setEnabled(isChecked);
             mVolumeLevelPreference.setEnabled(isChecked);
-            mChargingPowersharePreference.setEnabled(isChecked);
+            if (mChargingPowersharePreference != null) mChargingPowersharePreference.setEnabled(isChecked);
         }
 
         mHandler.post(() -> ServiceUtils.checkGlyphService());
@@ -194,7 +202,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mCallPreference.setEnabled(isChecked && !mMusicVisualizerPreference.isChecked());
         mCallPreference.setSwitchEnabled(isChecked && !mMusicVisualizerPreference.isChecked());
         mChargingLevelPreference.setEnabled(isChecked && !mMusicVisualizerPreference.isChecked());
-        mChargingPowersharePreference.setEnabled(isChecked && !mMusicVisualizerPreference.isChecked());
+        if (mChargingPowersharePreference != null) mChargingPowersharePreference.setEnabled(isChecked && !mMusicVisualizerPreference.isChecked());
         mVolumeLevelPreference.setEnabled(isChecked && !mMusicVisualizerPreference.isChecked());
         mMusicVisualizerPreference.setEnabled(isChecked);
 
