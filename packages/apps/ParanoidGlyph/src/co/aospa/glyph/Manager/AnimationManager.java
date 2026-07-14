@@ -119,7 +119,7 @@ public final class AnimationManager {
             } catch (Exception e) {
                 if (DEBUG) Log.d(TAG, "Exception while playing animation | name: " + name + " | exception: " + e);
             } finally {
-                updateLedFrame(new float[5]);
+                updateLedFrame(new float[36]);
                 StatusManager.setAnimationActive(false);
                 if (DEBUG) Log.d(TAG, "Done playing animation | name: " + name);
             }
@@ -282,7 +282,7 @@ public final class AnimationManager {
                     }
                 }
             }
-            updateLedFrame(new float[5]);
+            updateLedFrame(new float[36]);
             StatusManager.setCallLedActive(false);
             if (DEBUG) Log.d(TAG, "Done playing animation | name: " + name);
         });
@@ -337,7 +337,7 @@ public final class AnimationManager {
     public static void playMusic(String name) {
         submit(() -> {
             float maxBrightness = (float) Constants.getMaxBrightness();
-            float[] pattern = new float[5];
+            float[] pattern = new float[36];
 
             switch (name) {
                 case "low":
@@ -366,7 +366,7 @@ public final class AnimationManager {
             } catch (Exception e) {
                 if (DEBUG) Log.d(TAG, "Exception while playing animation | name: music: " + name + " | exception: " + e);
             } finally {
-                updateLedFrame(new float[5]);
+                updateLedFrame(new float[36]);
                 if (DEBUG) Log.d(TAG, "Done playing animation | name: " + name);
             }
         });
