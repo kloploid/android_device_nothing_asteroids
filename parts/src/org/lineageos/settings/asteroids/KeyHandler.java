@@ -186,9 +186,12 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     private void takeScreenshot() {
-        // Delegated via global action broadcast is not public; use accessibility-like intent.
-        Intent i = new Intent("com.android.systemui.action.SCREENSHOT");
-        i.setPackage("com.android.systemui");
-        try { mContext.sendBroadcast(i); } catch (Exception ignored) { }
+        try {
+            com.android.internal.util.ScreenshotHelper helper =
+                    new com.android.internal.util.ScreenshotHelper(mContext);
+            helper.takeScreenshot(
+                    android.view.WindowManager.ScreenshotSource.SCREENSHOT_KEY_OTHER,
+                    mHandler, null);
+        } catch (Exception ignored) { }
     }
 }
