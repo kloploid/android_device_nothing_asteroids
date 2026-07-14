@@ -27,6 +27,9 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import co.aospa.glyph.Manager.AnimationManager;
 import co.aospa.glyph.Sensors.FlipToGlyphSensor;
 
@@ -35,8 +38,14 @@ public class FlipToGlyphService extends Service {
     private static final String TAG = "FlipToGlyphService";
     private static final boolean DEBUG = true;
 
+    // Settle time: the phone must stay face-down this long before we engage
+    private static final long FLIP_SETTLE_MS = 1500;
+
     private boolean isFlipped;
     private int ringerMode;
+
+    private final Handler mFlipHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mEngageFlip = this::engageFlip;
 
     private AudioManager mAudioManager;
     private FlipToGlyphSensor mFlipToGlyphSensor;
@@ -78,13 +87,25 @@ public class FlipToGlyphService extends Service {
         if (flipped == isFlipped) return;
         if (DEBUG) Log.d(TAG, "Flipped: " + flipped);
         if (flipped) {
-            mWakeLock.acquire(2500);
-            AnimationManager.playCsv("flip");
-            ringerMode = mAudioManager.getRingerModeInternal();
-            mAudioManager.setRingerModeInternal(AudioManager.RINGER_MODE_SILENT);
+            // Wait for the phone to settle on the table before engaging
+            mFlipHandler.removeCallbacks(mEngageFlip);
+            mFlipHandler.postDelayed(mEngageFlip, FLIP_SETTLE_MS);
         } else {
-            mAudioManager.setRingerModeInternal(ringerMode);
+            mFlipHandler.removeCallbacks(mEngageFlip);
+            if (isFlipped) {
+                mAudioManager.setRingerModeInternal(ringerMode);
+                isFlipped = false;
+            }
         }
-        isFlipped = flipped;
+    }
+
+    private void engageFlip() {
+        if (isFlipped) return;
+        if (DEBUG) Log.d(TAG, "Flip settled, engaging");
+        mWakeLock.acquire(2500);
+        AnimationManager.playCsv("flip");
+        ringerMode = mAudioManager.getRingerModeInternal();
+        mAudioManager.setRingerModeInternal(AudioManager.RINGER_MODE_SILENT);
+        isFlipped = true;
     }
 }
