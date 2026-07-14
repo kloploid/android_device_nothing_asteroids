@@ -40,6 +40,7 @@ import com.android.settingslib.widget.MainSwitchPreference;
 import co.aospa.glyph.R;
 import co.aospa.glyph.Constants.Constants;
 import co.aospa.glyph.Manager.SettingsManager;
+import co.aospa.glyph.Utils.FileUtils;
 import co.aospa.glyph.Utils.ServiceUtils;
 
 public class SettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
@@ -60,6 +61,8 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private SettingObserver mSettingObserver;
 
     private Handler mHandler = new Handler();
+
+    private final Runnable mBrightnessPreviewOff = () -> FileUtils.writeAllLed(0);
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -132,6 +135,16 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         final String preferenceKey = preference.getKey();
+
+        if (preferenceKey.equals(Constants.GLYPH_BRIGHTNESS)) {
+            // Light up the glyphs at the selected brightness while sliding
+            int[] levels = Constants.getBrightnessLevels();
+            int idx = Math.max(1, Math.min(levels.length, (Integer) newValue)) - 1;
+            final int brightness = levels[idx];
+            mHandler.removeCallbacks(mBrightnessPreviewOff);
+            mHandler.post(() -> FileUtils.writeAllLed(brightness));
+            mHandler.postDelayed(mBrightnessPreviewOff, 1200);
+        }
 
         if (preferenceKey.equals(Constants.GLYPH_CALL_ENABLE)) {
             SettingsManager.setGlyphCallEnabled(!mCallPreference.isChecked());
