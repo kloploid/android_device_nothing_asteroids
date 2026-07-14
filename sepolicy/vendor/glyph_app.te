@@ -34,8 +34,3 @@ allow glyph_app {
     voiceinteraction_service
 }:service_manager find;
 
-# Optional framework probes; deny quietly instead of logging
-dontaudit glyph_app {
-    protolog_configuration_service
-    sensitive_content_protection_service
-}:service_manager find;
