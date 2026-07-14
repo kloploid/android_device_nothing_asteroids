@@ -27,7 +27,7 @@
             </intent-filter>
             <meta-data
                 android:name="com.android.settings.category"
-                android:value="com.android.settings.category.ia.device" />
+                android:value="com.android.settings.category.ia.homepage" />
             <meta-data
                 android:name="com.android.settings.title"
                 android:resource="@string/action_button_title" />
