@@ -133,7 +133,12 @@ public final class FileUtils {
         int mapId = ResourceUtils.getIdentifier("glyph_settings_zone_map", "array");
         if (mapId == 0) return value;
         int[] zoneMap = ResourceUtils.getIntArray("glyph_settings_zone_map");
-        if (zoneMap.length == 0 || value.length == zoneMap.length) return value;
+        if (zoneMap.length == 0) return value;
+        int zones = 0;
+        for (int z : zoneMap) if (z + 1 > zones) zones = z + 1;
+        // Only per-zone frames are expanded; native strip/frame lengths
+        // (5/11/20/36 on asteroids) are understood by the kernel as-is.
+        if (value.length != zones) return value;
         int[] frame = new int[zoneMap.length];
         for (int i = 0; i < zoneMap.length; i++) {
             int z = zoneMap[i];
