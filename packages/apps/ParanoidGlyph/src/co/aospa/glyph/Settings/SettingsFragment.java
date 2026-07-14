@@ -160,10 +160,19 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mHandler.postDelayed(() ->
+                mSwitchBar.setChecked(SettingsManager.isGlyphEnabled()), 150);
+    }
+
+    @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         SettingsManager.enableGlyph(isChecked);
 
         mSwitchBar.setChecked(isChecked);
+        mHandler.postDelayed(() ->
+                mSwitchBar.setChecked(SettingsManager.isGlyphEnabled()), 250);
 
         mFlipPreference.setEnabled(isChecked && !mMusicVisualizerPreference.isChecked());
         mBrightnessPreference.setEnabled(isChecked);
