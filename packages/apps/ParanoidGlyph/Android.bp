@@ -33,6 +33,7 @@ android_library {
     ],
 
     static_libs: [
+        "SettingsLibPreference",
         "androidx.core_core",
         "androidx.preference_preference",
         "SettingsLib",

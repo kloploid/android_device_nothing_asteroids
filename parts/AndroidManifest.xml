@@ -17,7 +17,7 @@
             android:name=".ActionButtonSettingsActivity"
             android:label="@string/action_button_title"
             android:exported="true"
-            android:theme="@style/Theme.SubSettingsBase">
+            android:theme="@style/Theme.SubSettingsBase.Expressive">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />

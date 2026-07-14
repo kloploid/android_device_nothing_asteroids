@@ -18,6 +18,7 @@ android_app {
     },
 
     static_libs: [
+        "SettingsLibPreference",
         "androidx.preference_preference",
         "SettingsLib",
         "SettingsLibCollapsingToolbarBaseActivity",
