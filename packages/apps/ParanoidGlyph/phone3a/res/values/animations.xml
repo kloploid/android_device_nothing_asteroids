@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string-array name="glyph_settings_animations_slugs" translatable="false">
-        <item>bounce</item>
-        <item>fill</item>
     </string-array>
     <integer-array name="glyph_settings_animations_supported_pattern_lengths" translatable="false">
         <item>3</item>
