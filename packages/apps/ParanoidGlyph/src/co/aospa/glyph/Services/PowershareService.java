@@ -52,6 +52,11 @@ public class PowershareService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String powersharePath = co.aospa.glyph.Utils.ResourceUtils.getString("glyph_settings_paths_powershare_enabled_absolute");
+        if (powersharePath == null || powersharePath.isEmpty()) {
+            stopSelf();
+            return START_NOT_STICKY;
+        }
         if (DEBUG) Log.d(TAG, "Starting service");
         mFileObserver.startWatching();
         mPowershareActiveObserver.startWatching();

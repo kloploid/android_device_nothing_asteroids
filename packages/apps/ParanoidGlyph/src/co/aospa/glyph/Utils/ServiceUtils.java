@@ -87,6 +87,11 @@ public final class ServiceUtils {
                 UserHandle.CURRENT);
     }
 
+    private static boolean hasPowershare() {
+        String p = ResourceUtils.getString("glyph_settings_paths_powershare_enabled_absolute");
+        return p != null && !p.isEmpty();
+    }
+
     private static void startPowershareService() {
         if (DEBUG) Log.d(TAG, "Starting Glyph powershare service");
         context.startServiceAsUser(new Intent(context, PowershareService.class),
@@ -119,7 +124,7 @@ public final class ServiceUtils {
             } else {
                 stopChargingService();
             }
-            if (SettingsManager.isGlyphPowershareEnabled()) {
+            if (hasPowershare() && SettingsManager.isGlyphPowershareEnabled()) {
                 startPowershareService();
             } else {
                 stopPowershareService();
