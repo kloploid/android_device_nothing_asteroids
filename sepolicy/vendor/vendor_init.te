@@ -1,2 +1,6 @@
 set_prop(vendor_init, vendor_qms_prop)
 set_prop(vendor_init, vendor_ssr_prop)
+
+# init.asteroids.nfc.sh publishes the detected chip to vendor.asteroids.nfc.*;
+# vendor_init reads it back to expand ${vendor.asteroids.nfc.*} in init.asteroids.rc.
+get_prop(vendor_init, vendor_asteroids_nfc_prop)
