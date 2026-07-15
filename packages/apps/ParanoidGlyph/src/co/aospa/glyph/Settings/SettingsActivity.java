@@ -18,8 +18,9 @@
 
 package co.aospa.glyph.Settings;
 
-import android.app.Fragment;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 
@@ -32,10 +33,10 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Fragment fragment = getFragmentManager().findFragmentById(com.android.settingslib.collapsingtoolbar.R.id.content_frame);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(com.android.settingslib.collapsingtoolbar.R.id.content_frame);
         if (fragment == null) {
             mSettingsFragment = new SettingsFragment();
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                 .add(com.android.settingslib.collapsingtoolbar.R.id.content_frame,
                     mSettingsFragment, TAG_GLYPH)
                 .commit();

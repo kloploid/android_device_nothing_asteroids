@@ -30,6 +30,8 @@ import android.widget.FrameLayout;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
+import com.android.settingslib.widget.GroupSectionDividerMixin;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -37,7 +39,7 @@ import co.aospa.glyph.R;
 import co.aospa.glyph.Constants.Constants;
 import co.aospa.glyph.Utils.ResourceUtils;
 
-public class GlyphAnimationPreference extends Preference {
+public class GlyphAnimationPreference extends Preference implements GroupSectionDividerMixin {
 
     private final String TAG = "GlyphAnimationPreference";
     private final boolean DEBUG = true;

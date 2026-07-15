@@ -34,8 +34,10 @@ android_library {
 
     static_libs: [
         "SettingsLibPreference",
+        "SettingsLibSettingsTheme",
         "androidx.core_core",
         "androidx.preference_preference",
+        "androidx.recyclerview_recyclerview",
         "SettingsLib",
     ],
 }

@@ -25,7 +25,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
-import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 
 import com.android.internal.util.ArrayUtils;
@@ -38,7 +37,7 @@ import co.aospa.glyph.Preference.GlyphAnimationPreference;
 import co.aospa.glyph.Utils.ResourceUtils;
 import co.aospa.glyph.Utils.ServiceUtils;
 
-public class CallSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
+public class CallSettingsFragment extends GlyphPreferenceFragment implements OnPreferenceChangeListener,
         OnCheckedChangeListener {
 
     private PreferenceScreen mScreen;
