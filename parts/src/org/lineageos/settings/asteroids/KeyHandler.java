@@ -170,9 +170,16 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     private void toggleDnd() {
-        Intent i = new Intent("android.settings.ZEN_MODE_SETTINGS");
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try { mContext.startActivity(i); } catch (Exception ignored) { }
+        android.app.NotificationManager nm =
+                mContext.getSystemService(android.app.NotificationManager.class);
+        if (nm == null) return;
+        try {
+            int current = nm.getCurrentInterruptionFilter();
+            nm.setInterruptionFilter(
+                    current == android.app.NotificationManager.INTERRUPTION_FILTER_ALL
+                            ? android.app.NotificationManager.INTERRUPTION_FILTER_PRIORITY
+                            : android.app.NotificationManager.INTERRUPTION_FILTER_ALL);
+        } catch (Exception ignored) { }
     }
 
     private void mediaPlayPause() {
