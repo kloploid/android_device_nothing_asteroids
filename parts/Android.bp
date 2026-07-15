@@ -17,13 +17,6 @@ android_app {
         enabled: false,
     },
 
-    static_libs: [
-        "SettingsLibPreference",
-        "androidx.preference_preference",
-        "SettingsLib",
-        "SettingsLibCollapsingToolbarBaseActivity",
-    ],
-
     required: [
         "privapp_whitelist_org.lineageos.settings.asteroids.xml",
     ],

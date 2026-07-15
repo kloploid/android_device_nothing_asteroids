@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Asteroids Settings</string>
-    <string name="action_button_title">Action Button</string>
-    <string name="action_button_summary">Configure the Action Button gestures</string>
-    <string name="action_button_short_title">Short press</string>
-    <string name="action_button_long_title">Long press</string>
-    <string name="action_button_double_title">Double press</string>
-    <string name="action_none">None</string>
-    <string name="action_torch">Toggle flashlight</string>
-    <string name="action_camera">Open camera</string>
-    <string name="action_screenshot">Take screenshot</string>
-    <string name="action_dnd">Do Not Disturb</string>
-    <string name="action_assistant">Assistant</string>
-    <string name="action_play_pause">Play / pause music</string>
+    <string name="app_name">Asteroids KeyHandler</string>
 </resources>
