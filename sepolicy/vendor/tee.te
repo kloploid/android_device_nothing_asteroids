@@ -1,0 +1,5 @@
+
+# qseecomd probes raw partition nodes at boot; harmless, quiet it down
+dontaudit tee vendor_gpt_block_device:blk_file read;
+dontaudit tee vendor_xbl_block_device:blk_file read;
+dontaudit tee device:chr_file { read write };

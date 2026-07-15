@@ -1,1 +1,4 @@
 allow hal_camera_default vendor_ntf_file:file r_file_perms;
+
+# camx probes /data/local/tmp for tuning overrides; not shipped here
+dontaudit hal_camera_default shell_data_file:dir search;
