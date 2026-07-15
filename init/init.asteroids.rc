@@ -91,3 +91,12 @@ service asteroids_nfc_detect /odm/bin/init.asteroids.nfc.sh
     group shell
     disabled
     oneshot
+
+# NFC chip detection results are published by the detect script to
+# vendor.asteroids.nfc.*; copy them into the protected persist props
+# here so the setter is vendor_init (system_vendor_config_prop policy).
+on property:vendor.asteroids.nfc.config=*
+    setprop persist.vendor.nfc.config_file_name ${vendor.asteroids.nfc.config}
+
+on property:vendor.asteroids.nfc.model=*
+    setprop persist.vendor.nfc_model ${vendor.asteroids.nfc.model}

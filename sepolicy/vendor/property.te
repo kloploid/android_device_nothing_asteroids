@@ -3,3 +3,7 @@ vendor_internal_prop(vendor_fingerprint_prop)
 
 # Secure Element
 vendor_internal_prop(vendor_secure_element_prop)
+
+# Intermediate NFC detection props (set by the detect script, consumed
+# by vendor_init triggers in init.asteroids.rc)
+vendor_internal_prop(vendor_asteroids_nfc_prop)

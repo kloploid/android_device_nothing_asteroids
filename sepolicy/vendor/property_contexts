@@ -9,3 +9,4 @@ persist.vendor.nfc_model               u:object_r:vendor_nfc_prop:s0
 # Secure Element
 persist.vendor.se.reset      u:object_r:vendor_secure_element_prop:s0
 persist.vendor.se.streset    u:object_r:vendor_secure_element_prop:s0
+vendor.asteroids.nfc.    u:object_r:vendor_asteroids_nfc_prop:s0
