@@ -25,6 +25,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -33,14 +34,24 @@ public class FlipToGlyphSensor implements SensorEventListener {
     private static final boolean DEBUG = true;
     private static final String TAG = "FlipToGlyphSensor";
 
+    // Nothing ships a dedicated wake-up sensor that reports face-up/face-down
+    // orientation. It keeps working with the screen off (it wakes the AP),
+    // unlike the plain accelerometer, which stops delivering events once the
+    // AP suspends. Prefer it; fall back to the accelerometer heuristic on
+    // devices that do not expose it.
+    private static final String SCREEN_UPWARD_STRING_TYPE = "android.sensor.screen_upward";
+
     private boolean isFlipped = false;
     private final Consumer<Boolean> mOnFlip;
 
-    private SensorManager mSensorManager;
-    private Sensor mSensorAccelerometer;
-    private Context mContext;
+    private final SensorManager mSensorManager;
+    private final Context mContext;
 
-    private Duration mTimeThreshold = Duration.ofMillis(1_000L);;
+    private final Sensor mScreenUpwardSensor;
+    private final Sensor mSensorAccelerometer;
+
+    // --- accelerometer fallback state ---
+    private Duration mTimeThreshold = Duration.ofMillis(1_000L);
     private float mAccelerationThreshold = 0.2f;
     private float mZAccelerationThreshold = -9.5f;
     private float mZAccelerationThresholdLenient = mZAccelerationThreshold + 1.0f;
@@ -59,13 +70,50 @@ public class FlipToGlyphSensor implements SensorEventListener {
         mContext = context;
         mOnFlip = Objects.requireNonNull(onFlip);
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER, false);
+        mScreenUpwardSensor = findScreenUpwardSensor();
+        mSensorAccelerometer = mScreenUpwardSensor != null
+                ? null
+                : mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER, false);
+        if (DEBUG) {
+            Log.d(TAG, "Using " + (mScreenUpwardSensor != null
+                    ? "wake-up screen_upward sensor"
+                    : "accelerometer fallback"));
+        }
+    }
+
+    private Sensor findScreenUpwardSensor() {
+        List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+        for (Sensor sensor : sensors) {
+            if (SCREEN_UPWARD_STRING_TYPE.equals(sensor.getStringType())
+                    && sensor.isWakeUpSensor()) {
+                return sensor;
+            }
+        }
+        return null;
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER) return;
+        if (mScreenUpwardSensor != null && event.sensor == mScreenUpwardSensor) {
+            onScreenUpwardChanged(event);
+        } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            onAccelerometerChanged(event);
+        }
+    }
 
+    private void onScreenUpwardChanged(SensorEvent event) {
+        // On-change sensor: values[0] encodes the current orientation. Log the
+        // raw value so the face-down encoding can be confirmed on-device.
+        final float value = event.values[0];
+        // Face-up reads high (~1), face-down reads low (~0).
+        final boolean faceDown = value < 0.5f;
+        if (DEBUG) Log.d(TAG, "screen_upward=" + value + " -> faceDown=" + faceDown);
+        if (faceDown != isFlipped) {
+            onFlip(faceDown);
+        }
+    }
+
+    private void onAccelerometerChanged(SensorEvent event) {
         final float x = event.values[0];
         final float y = event.values[1];
         mCurrentXYAcceleration.updateMovingAverage(x * x + y * y);
@@ -77,8 +125,8 @@ public class FlipToGlyphSensor implements SensorEventListener {
             mPrevAcceleration = mCurrentXYAcceleration.mMovingAverage;
             mPrevAccelerationTime = curTime;
         }
-        final boolean moving = curTime - mPrevAccelerationTime <= mTimeThreshold.toNanos();
 
+        final boolean moving = curTime - mPrevAccelerationTime <= mTimeThreshold.toNanos();
         final float zAccelerationThreshold =
                 isFlipped ? mZAccelerationThresholdLenient : mZAccelerationThreshold;
         final boolean isCurrentlyFaceDown =
@@ -86,6 +134,7 @@ public class FlipToGlyphSensor implements SensorEventListener {
         final boolean isFaceDownForPeriod = isCurrentlyFaceDown
                 && mZAccelerationIsFaceDown
                 && curTime - mZAccelerationFaceDownTime > mTimeThreshold.toNanos();
+
         if (isCurrentlyFaceDown && !mZAccelerationIsFaceDown) {
             mZAccelerationFaceDownTime = curTime;
             mZAccelerationIsFaceDown = true;
@@ -111,16 +160,23 @@ public class FlipToGlyphSensor implements SensorEventListener {
 
     public void enable() {
         if (DEBUG) Log.d(TAG, "Enabling Sensor");
-        mSensorManager.registerListener(this, mSensorAccelerometer,
+        if (mScreenUpwardSensor != null) {
+            // Wake-up on-change sensor: no batching so the flip is delivered
+            // immediately even with the screen off.
+            mSensorManager.registerListener(this, mScreenUpwardSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+        } else {
+            mSensorManager.registerListener(this, mSensorAccelerometer,
                     SensorManager.SENSOR_DELAY_NORMAL,
                     mContext.getResources().getInteger(
                         com.android.internal.R.integer.config_flipToScreenOffMaxLatencyMicros));
+        }
     }
 
     public void disable() {
         if (DEBUG) Log.d(TAG, "Disabling Sensor");
         onFlip(false);
-        mSensorManager.unregisterListener(this, mSensorAccelerometer);
+        mSensorManager.unregisterListener(this);
     }
 
     private final class ExponentialMovingAverage {

@@ -87,6 +87,12 @@ public class FlipToGlyphService extends Service {
         if (flipped == isFlipped) return;
         if (DEBUG) Log.d(TAG, "Flipped: " + flipped);
         if (flipped) {
+            // The screen is usually off here, so hold the AP awake across the
+            // settle delay -- postDelayed runs on uptime, which does not
+            // advance while suspended, and engageFlip would otherwise never run.
+            if (!mWakeLock.isHeld()) {
+                mWakeLock.acquire(FLIP_SETTLE_MS + 1000);
+            }
             // Wait for the phone to settle on the table before engaging
             mFlipHandler.removeCallbacks(mEngageFlip);
             mFlipHandler.postDelayed(mEngageFlip, FLIP_SETTLE_MS);
