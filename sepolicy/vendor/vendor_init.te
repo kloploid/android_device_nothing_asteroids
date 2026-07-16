@@ -4,3 +4,8 @@ set_prop(vendor_init, vendor_ssr_prop)
 # init.asteroids.nfc.sh publishes the detected chip to vendor.asteroids.nfc.*;
 # vendor_init reads it back to expand ${vendor.asteroids.nfc.*} in init.asteroids.rc.
 get_prop(vendor_init, vendor_asteroids_nfc_prop)
+
+# persist.vendor.nfc_model lands on vendor_nfc_prop, while
+# persist.vendor.nfc.config_file_name matches the platform prefix rule and
+# becomes vendor_persist_nfc_prop, which vendor_init may already set.
+set_prop(vendor_init, vendor_nfc_prop)
