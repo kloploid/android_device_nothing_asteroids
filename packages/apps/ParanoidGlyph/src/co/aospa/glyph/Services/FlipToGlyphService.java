@@ -22,6 +22,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.os.BatteryManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -31,6 +32,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import co.aospa.glyph.Manager.AnimationManager;
+import co.aospa.glyph.Manager.SettingsManager;
 import co.aospa.glyph.Sensors.FlipToGlyphSensor;
 
 public class FlipToGlyphService extends Service {
@@ -51,6 +53,7 @@ public class FlipToGlyphService extends Service {
     private FlipToGlyphSensor mFlipToGlyphSensor;
     private PowerManager mPowerManager;
     private WakeLock mWakeLock;
+    private BatteryManager mBatteryManager;
 
     @Override
     public void onCreate() {
@@ -62,6 +65,7 @@ public class FlipToGlyphService extends Service {
 
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+        mBatteryManager = (BatteryManager) getSystemService(Context.BATTERY_SERVICE);
     }
 
     @Override
@@ -108,8 +112,17 @@ public class FlipToGlyphService extends Service {
     private void engageFlip() {
         if (isFlipped) return;
         if (DEBUG) Log.d(TAG, "Flip settled, engaging");
-        mWakeLock.acquire(2500);
+        // Cover the flip animation plus an optional battery readout after it.
+        mWakeLock.acquire(4000);
         AnimationManager.playCsv("flip");
+        // When charging, show the level right after the flip -- playCharging
+        // waits on the flip animation, so the two play in sequence rather than
+        // fighting over the LEDs.
+        if (mBatteryManager.isCharging()
+                && SettingsManager.isGlyphChargingEnabled()) {
+            AnimationManager.playCharging(mBatteryManager.getIntProperty(
+                    BatteryManager.BATTERY_PROPERTY_CAPACITY), true);
+        }
         ringerMode = mAudioManager.getRingerModeInternal();
         mAudioManager.setRingerModeInternal(AudioManager.RINGER_MODE_SILENT);
         isFlipped = true;

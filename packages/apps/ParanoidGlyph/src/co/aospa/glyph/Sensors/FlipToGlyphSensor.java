@@ -41,6 +41,13 @@ public class FlipToGlyphSensor implements SensorEventListener {
     // devices that do not expose it.
     private static final String SCREEN_UPWARD_STRING_TYPE = "android.sensor.screen_upward";
 
+    // The sensor reports 2 for face-down, 1 for face-up and 0 for anything in
+    // between (upright, in a hand, mid-flip). Only 2 means the phone is lying
+    // face-down; every other reading means it is not, so 0 has to release the
+    // flip as well -- picking the phone up reports 0, not 1, and waiting for 1
+    // would leave the ringer muted until it is laid face-up on a table.
+    private static final float SCREEN_FACE_DOWNWARD = 2.0f;
+
     private boolean isFlipped = false;
     private final Consumer<Boolean> mOnFlip;
 
@@ -102,12 +109,9 @@ public class FlipToGlyphSensor implements SensorEventListener {
     }
 
     private void onScreenUpwardChanged(SensorEvent event) {
-        // On-change sensor: values[0] encodes the current orientation. Log the
-        // raw value so the face-down encoding can be confirmed on-device.
         final float value = event.values[0];
-        // Face-up reads high (~1), face-down reads low (~0).
-        final boolean faceDown = value < 0.5f;
-        if (DEBUG) Log.d(TAG, "screen_upward=" + value + " -> faceDown=" + faceDown);
+        if (DEBUG) Log.d(TAG, "screen_upward=" + value);
+        final boolean faceDown = value == SCREEN_FACE_DOWNWARD;
         if (faceDown != isFlipped) {
             onFlip(faceDown);
         }
